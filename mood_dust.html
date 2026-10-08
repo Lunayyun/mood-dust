@@ -1,0 +1,896 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Dust - Cyber Zen Journal</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@200;300;400&display=swap" rel="stylesheet">
+    <style>
+        /* ============================================
+           LOGIN SCREEN
+           ============================================ */
+        .login-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 50;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+        }
+
+        .login-screen.hidden {
+            opacity: 0;
+            visibility: hidden;
+            pointer-events: none;
+        }
+
+        .login-panel {
+            width: 100%;
+            max-width: 380px;
+            padding: 48px 40px;
+            background: rgba(255, 255, 255, 0.04);
+            backdrop-filter: blur(40px);
+            -webkit-backdrop-filter: blur(40px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 28px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3), 0 0 80px rgba(160, 200, 160, 0.06);
+            animation: loginFadeIn 1s cubic-bezier(0.4, 0, 0.2, 1);
+            transition: transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.6s;
+        }
+
+        .login-screen.hidden .login-panel {
+            transform: translateY(-20px) scale(0.98);
+            opacity: 0;
+        }
+
+        @keyframes loginFadeIn {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .login-brand {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .login-title {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 42px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.92);
+            letter-spacing: 2px;
+            margin-bottom: 12px;
+            line-height: 1.2;
+            text-transform: uppercase;
+        }
+
+        .login-subtitle {
+            font-family: 'Cormorant Garamond', Georgia, serif;
+            font-size: 15px;
+            font-weight: 300;
+            font-style: italic;
+            color: rgba(255, 255, 255, 0.45);
+            letter-spacing: 0.5px;
+        }
+
+        .login-form {
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+        }
+
+        .login-input-group {
+            position: relative;
+        }
+
+        .login-input {
+            width: 100%;
+            padding: 14px 18px;
+            background: rgba(0, 0, 0, 0.2);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 14px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.9);
+            letter-spacing: 0.5px;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            outline: none;
+        }
+
+        .login-input::placeholder {
+            color: rgba(255, 255, 255, 0.25);
+            font-weight: 300;
+        }
+
+        .login-input:focus {
+            background: rgba(0, 0, 0, 0.3);
+            border-color: rgba(160, 200, 160, 0.4);
+            box-shadow: 0 0 20px rgba(160, 200, 160, 0.08);
+        }
+
+        .login-btn {
+            width: 100%;
+            padding: 15px 28px;
+            margin-top: 8px;
+            background: rgba(160, 200, 160, 0.12);
+            color: rgba(160, 200, 160, 0.85);
+            border: 1px solid rgba(160, 200, 160, 0.25);
+            border-radius: 14px;
+            cursor: pointer;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            font-weight: 500;
+            letter-spacing: 3px;
+            text-transform: uppercase;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .login-btn::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(160, 200, 160, 0.1), transparent);
+            transition: left 0.6s;
+        }
+
+        .login-btn:hover::before {
+            left: 100%;
+        }
+
+        .login-btn:hover {
+            background: rgba(160, 200, 160, 0.25);
+            color: rgba(160, 200, 160, 1);
+            border-color: rgba(160, 200, 160, 0.5);
+            box-shadow: 0 0 30px rgba(160, 200, 160, 0.15);
+            transform: translateY(-1px);
+        }
+
+        .login-btn:active {
+            transform: translateY(0);
+        }
+
+        .login-switch-text {
+            text-align: center;
+            margin-top: 20px;
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            font-weight: 300;
+            color: rgba(255, 255, 255, 0.35);
+            letter-spacing: 0.5px;
+        }
+
+        .login-switch-btn {
+            background: none;
+            border: none;
+            color: rgba(160, 200, 160, 0.6);
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            font-weight: 400;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+            padding: 0;
+            margin-left: 4px;
+        }
+
+        .login-switch-btn:hover {
+            color: rgba(160, 200, 160, 0.9);
+        }
+
+        .auth-form.hidden {
+            display: none;
+        }
+
+        .back-to-login {
+            text-align: center;
+            margin-top: 16px;
+        }
+
+        .back-to-login-btn {
+            background: none;
+            border: none;
+            color: rgba(255, 255, 255, 0.35);
+            font-family: 'Inter', system-ui, sans-serif;
+            font-size: 13px;
+            font-weight: 300;
+            cursor: pointer;
+            letter-spacing: 0.5px;
+            transition: color 0.3s;
+            padding: 0;
+        }
+
+        .back-to-login-btn:hover {
+            color: rgba(255, 255, 255, 0.6);
+        }
+
+        /* App container hidden state */
+        .app-container {
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), visibility 0.8s;
+        }
+
+        .app-container.logged-in {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        /* Responsive login */
+        @media (max-width: 480px) {
+            .login-panel {
+                max-width: 90%;
+                padding: 36px 28px;
+                border-radius: 22px;
+            }
+
+            .login-title {
+                font-size: 34px;
+            }
+
+            .login-subtitle {
+                font-size: 14px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- WebGL Rain Effect Background -->
+    <canvas id="rainCanvas"></canvas>
+
+    <!-- Login Screen -->
+    <div class="login-screen" id="loginScreen">
+        <div class="login-panel">
+            <div class="login-brand">
+                <h1 class="login-title">mood dust</h1>
+                <p class="login-subtitle">A quiet place for your drifting mind.</p>
+            </div>
+            <form class="login-form auth-form" id="loginForm" autocomplete="off">
+                <div class="login-input-group">
+                    <input type="text" id="loginUsername" class="login-input" placeholder="Username" required autocomplete="off">
+                </div>
+                <div class="login-input-group">
+                    <input type="password" id="loginPassword" class="login-input" placeholder="Password" required autocomplete="off">
+                </div>
+                <button type="submit" class="login-btn">
+                    <span>Enter</span>
+                </button>
+                <div class="login-switch-text">
+                    No account?
+                    <button type="button" class="login-switch-btn" id="showRegisterBtn">Create Account</button>
+                </div>
+            </form>
+            <form class="login-form auth-form hidden" id="registerForm" autocomplete="off">
+                <div class="login-input-group">
+                    <input type="text" id="registerUsername" class="login-input" placeholder="Username" required autocomplete="off">
+                </div>
+                <div class="login-input-group">
+                    <input type="password" id="registerPassword" class="login-input" placeholder="Password" required autocomplete="off">
+                </div>
+                <div class="login-input-group">
+                    <input type="password" id="registerConfirmPassword" class="login-input" placeholder="Confirm Password" required autocomplete="off">
+                </div>
+                <button type="submit" class="login-btn" id="registerBtn">
+                    <span>Create Account</span>
+                </button>
+                <div class="back-to-login">
+                    <button type="button" class="back-to-login-btn" id="showLoginBtn">Back to Login</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Navigation Bar (Home / Meditation / Community) -->
+    <nav class="mode-switcher" id="navBar">
+        <a href="mood_dust.html" class="nav-btn active" id="navHome">
+            <span class="nav-label">Home</span>
+        </a>
+        <span class="mode-divider"></span>
+        <a href="meditation.html" class="nav-btn" id="navMeditation">
+            <span class="nav-label">Meditation</span>
+        </a>
+        <span class="mode-divider"></span>
+        <a href="community.html" class="nav-btn" id="navCommunity">
+            <span class="nav-label">Community</span>
+        </a>
+    </nav>
+
+    <!-- Vibe Mixer (Hidden floating panel) -->
+    <div class="vibe-mixer" id="vibeMixer">
+        <div class="vibe-mixer-toggle" id="vibeMixerToggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <circle cx="12" cy="12" r="3"/>
+                <path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 6.34L2.1 2.1m17.8 17.8l-4.24-4.24M6.34 17.66l-4.24 4.24M23 12h-6m-6 0H1m20.24-4.24l-4.24 4.24M6.34 6.34l-4.24-4.24"/>
+            </svg>
+        </div>
+        <div class="vibe-mixer-panel" id="vibeMixerPanel">
+            <div class="vibe-mixer-header">
+                <span>Vibe Mixer</span>
+            </div>
+            <div class="vibe-control">
+                <label>Rain Amount</label>
+                <input type="range" id="rainAmountSlider" min="0" max="100" value="50" class="vibe-slider">
+            </div>
+            <div class="vibe-control">
+                <label>Rain Sound</label>
+                <input type="range" id="rainSoundSlider" min="0" max="100" value="30" class="vibe-slider">
+            </div>
+        </div>
+    </div>
+
+    <div class="app-container" id="appContainer">
+        <!-- Left Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <p class="greeting-subtitle" id="greetingTime">Good morning</p>
+                <h1 class="greeting-title">Capture the moment</h1>
+                <div class="date-badge" id="dateBadge"></div>
+            </div>
+
+            <section class="calendar-section">
+                <div class="section-header">
+                    <h2 class="section-title">Looking back</h2>
+                    <div class="calendar-nav-small">
+                        <button id="prevMonthSmall" class="nav-btn-small">←</button>
+                        <span id="currentMonthSmall" class="current-month-small"></span>
+                        <button id="nextMonthSmall" class="nav-btn-small">→</button>
+                    </div>
+                </div>
+                <div class="calendar-mini" id="calendarMini"></div>
+                
+                <!-- Monthly Mood Stats -->
+                <div class="monthly-mood-stats" id="monthlyMoodStats">
+                    <div class="stats-header">
+                        <span class="stats-title">Monthly Mood</span>
+                    </div>
+                    <div class="stats-grid" id="moodStatsGrid"></div>
+                </div>
+            </section>
+        </aside>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Daily Quote Card -->
+            <section class="quote-card">
+                <div class="quote-label">Daily Inspiration</div>
+                <p class="quote-text" id="dailyQuote">I'm rooted, but I flow.</p>
+                <div class="quote-decoration"></div>
+            </section>
+
+            <!-- Quick Mood Selection -->
+            <section class="mood-section">
+                <div class="section-header">
+                    <h2 class="section-title">How are you feeling?</h2>
+                </div>
+                <div class="mood-grid" id="moodSelector">
+                    <button class="mood-card" data-mood="meditation" title="Meditation">
+                        <img class="mood-icon" src="https://lazyman.yixiaai.com/files/494450/1d86cb1d-554b-410c-8880-c259482e13d9.png" alt="Meditation">
+                        <span class="mood-name">Meditation</span>
+                    </button>
+                    <button class="mood-card" data-mood="isolate" title="Isolate">
+                        <img class="mood-icon" src="https://lazyman.yixiaai.com/files/494450/70fca6f8-435b-4138-bae3-7bd41ea28f8f.png" alt="Isolate">
+                        <span class="mood-name">Isolate</span>
+                    </button>
+                    <button class="mood-card" data-mood="confident" title="Confident">
+                        <img class="mood-icon" src="https://api.iconify.design/ic/baseline-wb-sunny.svg?color=%23333333" alt="I got it">
+                        <span class="mood-name">I got it</span>
+                    </button>
+                    <button class="mood-card" data-mood="peaceful" title="Peaceful">
+                        <img class="mood-icon" src="https://lazyman.yixiaai.com/files/494450/8bede4d4-3727-44af-8ced-c94a8c25c7d2.png" alt="Peaceful">
+                        <span class="mood-name">Peaceful</span>
+                    </button>
+                    <button class="mood-card" data-mood="reading" title="Reading">
+                        <img class="mood-icon" src="https://lazyman.yixiaai.com/files/494450/5bf62baa-97c6-4678-9f8d-ca1fe4f5271d.png" alt="Reading">
+                        <span class="mood-name">Reading</span>
+                    </button>
+                    <button class="mood-card" data-mood="thinking" title="Thinking">
+                        <img class="mood-icon" src="https://lazyman.yixiaai.com/files/494450/bfaec81e-dff2-463b-8a60-9ab7a31c88b3.png" alt="Thinking">
+                        <span class="mood-name">Thinking</span>
+                    </button>
+                    <button class="mood-card" data-mood="happy" title="Happy">
+                        <img class="mood-icon" src="https://lazyman.yixiaai.com/files/494450/99a7fad7-87c7-4b35-b47f-c6a24c09c7a6.png" alt="Happy">
+                        <span class="mood-name">Happy</span>
+                    </button>
+                    <button class="mood-card" data-mood="sad" title="Sad">
+                        <img class="mood-icon" src="https://lazyman.yixiaai.com/files/494450/51c2121c-8c5f-4d80-814a-5764ca387807.png" alt="Sad">
+                        <span class="mood-name">Sad</span>
+                    </button>
+                </div>
+            </section>
+
+            <!-- Immersive Editor (The Deck) -->
+            <section class="editor-section">
+                <div class="editor-card" id="editorCard">
+                    <div class="editor-header">
+                        <span class="editor-label">Your thoughts</span>
+                        <div class="editor-controls">
+                            <div class="selected-mood-display" id="selectedMoodDisplay">
+                                <img class="selected-mood-symbol" id="selectedMoodSymbol" src="https://lazyman.yixiaai.com/files/494450/8bede4d4-3727-44af-8ced-c94a8c25c7d2.png" alt="Peaceful">
+                                <span class="selected-mood-text" id="selectedMoodText">Peaceful</span>
+                            </div>
+                            <div class="font-switcher" id="fontSwitcher">
+                                <button class="font-btn active" data-font="serif" title="Serif">S</button>
+                                <button class="font-btn" data-font="sans" title="Sans">A</button>
+                                <button class="font-btn" data-font="mono" title="Mono">M</button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <textarea
+                        id="diaryContent"
+                        class="diary-textarea"
+                        placeholder="What happened today? Write your thoughts..."
+                        rows="6"
+                    ></textarea>
+
+                    <!-- AI Poetry Generator -->
+                    <div class="ai-poetry-section">
+                        <div class="ai-input-row">
+                            <input
+                                type="text"
+                                id="keywordInput"
+                                class="keyword-input"
+                                placeholder="Enter a keyword (e.g., sunset, wind, love)"
+                            >
+                            <button id="generatePoetry" class="ai-btn">
+                                <span>Generate</span>
+                            </button>
+                        </div>
+                        <div id="poetryResult" class="poetry-result hidden"></div>
+                    </div>
+
+                    <!-- Image Upload -->
+                    <div class="image-upload-section">
+                        <div class="upload-area" id="imageDropZone">
+                            <svg class="upload-icon" viewBox="0 0 24 24" fill="none" stroke="currentColor">
+                                <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                <polyline points="17 8 12 3 7 8"></polyline>
+                                <line x1="12" y1="3" x2="12" y2="15"></line>
+                            </svg>
+                            <p class="upload-text">Click or drag to add images</p>
+                            <input type="file" id="imageInput" multiple accept="image/*" class="file-input">
+                        </div>
+                        <div id="imagePreview" class="image-preview-grid hidden"></div>
+                    </div>
+
+                    <div class="editor-footer">
+                        <button id="editAgain" class="edit-btn active">
+                            <span>Edit</span>
+                        </button>
+                        <button id="layoutBtn" class="layout-btn">
+                            <span>Layout</span>
+                        </button>
+                        <button id="saveDiary" class="save-btn">
+                            <span class="save-icon">◉</span>
+                            <span class="save-text">Save Entry</span>
+                        </button>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Layout Studio -->
+    <div class="layout-studio" id="layoutStudio">
+        <div class="layout-studio-header">
+            <h2 class="layout-studio-title">Layout Studio</h2>
+            <button class="layout-studio-close" id="layoutStudioClose">×</button>
+        </div>
+        <div class="layout-studio-body">
+            <div class="layout-preview-area">
+                <div class="layout-card" id="layoutCard">
+                    <img class="layout-card-image" id="layoutCardImage" src="" alt="" style="display:none;">
+                    <div class="layout-card-content" id="layoutCardContent">
+                        <div class="layout-card-date" id="layoutCardDate"></div>
+                        <div class="layout-card-text" id="layoutCardText"></div>
+                        <div class="layout-card-footer">
+                            <span class="layout-card-user" id="layoutCardUser"></span>
+                            <span class="layout-card-mood" id="layoutCardMood"></span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="layout-controls">
+                <div class="layout-template-selector">
+                    <div class="layout-template-title">Template</div>
+                    <div class="layout-template-options">
+                        <button class="layout-template-btn active" data-template="overlay">Overlay</button>
+                        <button class="layout-template-btn" data-template="split">Split</button>
+                    </div>
+                </div>
+                <div class="layout-font-size-control">
+                    <button class="font-size-btn" id="fontSizeDecrease" title="Decrease font size">−</button>
+                    <span class="font-size-value" id="fontSizeValue">18px</span>
+                    <button class="font-size-btn" id="fontSizeIncrease" title="Increase font size">+</button>
+                </div>
+                <button class="layout-add-btn" id="addMoodCardBtn">
+                    <span>Add Mood</span>
+                </button>
+                <button class="layout-add-btn" id="addPoetryCardBtn">
+                    <span>Add Poetry</span>
+                </button>
+                <button class="layout-export-btn" id="layoutExportBtn">
+                    <span>Export PNG</span>
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Status Message -->
+    <div class="status-message" id="statusMessage"></div>
+
+    <!-- WebGL Rain Effect Script -->
+    <script>
+    (function() {
+        const canvas = document.getElementById('rainCanvas');
+        const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+
+        if (!gl) {
+            console.log('WebGL not supported, falling back to CSS background');
+            return;
+        }
+
+        // Vibe mixer state
+        let rainAmount = 0.5;
+        let blurLevel = 0.0;
+        let noiseLevel = 0.2;
+        let musicBlend = 0.0;
+
+        // Listen to vibe mixer sliders
+        document.getElementById('rainAmountSlider')?.addEventListener('input', (e) => {
+            rainAmount = e.target.value / 100;
+        });
+        document.getElementById('blurSlider')?.addEventListener('input', (e) => {
+            blurLevel = e.target.value / 100;
+        });
+        document.getElementById('noiseSlider')?.addEventListener('input', (e) => {
+            noiseLevel = e.target.value / 100;
+        });
+        document.getElementById('musicSlider')?.addEventListener('input', (e) => {
+            musicBlend = e.target.value / 100;
+        });
+
+        let mouseX = 0.5;
+        let mouseY = 0.5;
+        let bgTexture = null;
+
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX / window.innerWidth;
+            mouseY = e.clientY / window.innerHeight;
+        });
+
+        const vertexShaderSource = `
+            attribute vec2 a_position;
+            attribute vec2 a_texCoord;
+            varying vec2 v_texCoord;
+            void main() {
+                gl_Position = vec4(a_position, 0.0, 1.0);
+                v_texCoord = a_texCoord;
+            }
+        `;
+
+        const fragmentShaderSource = `
+            precision mediump float;
+            uniform float iTime;
+            uniform vec2 iResolution;
+            uniform vec2 iMouse;
+            uniform sampler2D iChannel0;
+            uniform float u_rainAmount;
+            uniform float u_blurLevel;
+            uniform float u_noiseLevel;
+            varying vec2 v_texCoord;
+
+            float hash(vec2 p) {
+                vec3 p3 = fract(vec3(p.xyx) * 0.1031);
+                p3 += dot(p3, p3.yzx + 33.33);
+                return fract((p3.x + p3.y) * p3.z);
+            }
+
+            float noise(vec2 p) {
+                vec2 i = floor(p);
+                vec2 f = fract(p);
+                f = f * f * (3.0 - 2.0 * f);
+                float a = hash(i);
+                float b = hash(i + vec2(1.0, 0.0));
+                float c = hash(i + vec2(0.0, 1.0));
+                float d = hash(i + vec2(1.0, 1.0));
+                return mix(mix(a, b, f.x), mix(c, d, f.x), f.y);
+            }
+
+            // Static drops on glass - stable positions
+            float staticDrop(vec2 uv, float seed) {
+                vec2 pos = vec2(
+                    hash(vec2(seed * 1.618, 0.0)),
+                    hash(vec2(seed * 2.718, 1.0))
+                );
+                float size = 0.008 + hash(vec2(seed * 3.142, 2.0)) * 0.012;
+                float dist = length(uv - pos);
+                float drop = smoothstep(size, size * 0.3, dist) * 0.4;
+                // Inner highlight - more stable
+                float highlight = smoothstep(size * 0.5, size * 0.2, dist) * 0.15;
+                return drop + highlight;
+            }
+
+            // Falling rain drop with vertical trail - stable and smooth
+            float fallingDrop(vec2 uv, float time, float id, float rainIntensity) {
+                float x = hash(vec2(id * 1.618, 0.0));
+                float speed = 0.3 + hash(vec2(id * 2.718, 1.0)) * 0.5;
+                float size = 0.003 + hash(vec2(id * 3.142, 2.0)) * 0.004;
+                float trailLen = 0.05 + hash(vec2(id * 4.669, 3.0)) * 0.08;
+
+                // Vertical falling position - smooth cycle
+                float cycle = time * speed + hash(vec2(id * 5.0, 4.0));
+                float y = 1.0 - fract(cycle);
+
+                // Purely vertical, no wobble
+                float dropX = x;
+
+                // Main drop - smooth edge
+                float dist = length(uv - vec2(dropX, y));
+                float drop = smoothstep(size, size * 0.2, dist);
+
+                // Vertical trail - smooth fade
+                float trailY = uv.y - y;
+                float trail = 0.0;
+                if (trailY > 0.0 && trailY < trailLen) {
+                    float trailFade = smoothstep(trailLen, 0.0, trailY);
+                    float trailWidth = size * (0.3 + trailFade * 0.7);
+                    float trailDist = abs(uv.x - dropX);
+                    trail = smoothstep(trailWidth, 0.0, trailDist) * trailFade * 0.3;
+                }
+
+                return (drop + trail) * rainIntensity;
+            }
+
+            // Drop layer 2 - smaller faster drops - stable
+            float dropLayer2(vec2 uv, float time, float id, float rainIntensity) {
+                float x = hash(vec2(id * 1.618 + 100.0, 0.0));
+                float speed = 0.5 + hash(vec2(id * 2.718 + 100.0, 1.0)) * 0.7;
+                float size = 0.001 + hash(vec2(id * 3.142 + 100.0, 2.0)) * 0.002;
+
+                // Stable vertical fall
+                float cycle = time * speed + hash(vec2(id * 4.669 + 100.0, 3.0));
+                float y = 1.0 - fract(cycle);
+                float dist = length(uv - vec2(x, y));
+                return smoothstep(size, size * 0.2, dist) * rainIntensity * 0.5;
+            }
+
+            // Glass fog/mist effect
+            float glassFog(vec2 uv, float time, float fogIntensity) {
+                float n = noise(uv * 8.0 + time * 0.1);
+                n += noise(uv * 16.0 - time * 0.05) * 0.5;
+                n = n / 1.5;
+                return smoothstep(0.3, 0.7, n) * fogIntensity * 0.3;
+            }
+
+            // Lightning flash
+            float lightning(float time) {
+                float t = fract(time * 0.05);
+                float flash = 0.0;
+                if (t > 0.95) {
+                    flash = smoothstep(0.95, 0.97, t) * smoothstep(1.0, 0.98, t);
+                }
+                return flash * 0.15;
+            }
+
+            void main() {
+                vec2 uv = gl_FragCoord.xy / iResolution.xy;
+                vec2 texCoord = v_texCoord;
+
+                // Use vibe mixer values directly
+                float rainIntensity = u_rainAmount;
+                float fogIntensity = u_blurLevel;
+                float grainIntensity = u_noiseLevel;
+
+                // Sample background with real blur effect
+                vec3 bg = texture2D(iChannel0, texCoord).rgb;
+
+                // Real Gaussian blur based on blur level
+                if (u_blurLevel > 0.01) {
+                    float blurRadius = u_blurLevel * 0.015;
+                    vec3 blurred = vec3(0.0);
+                    float totalWeight = 0.0;
+
+                    // 3x3 Gaussian kernel sampling
+                    for (float x = -2.0; x <= 2.0; x += 1.0) {
+                        for (float y = -2.0; y <= 2.0; y += 1.0) {
+                            float weight = exp(-(x*x + y*y) / 2.0);
+                            vec2 offset = vec2(x, y) * blurRadius;
+                            blurred += texture2D(iChannel0, texCoord + offset).rgb * weight;
+                            totalWeight += weight;
+                        }
+                    }
+                    bg = blurred / totalWeight;
+                }
+
+                // Add film grain - only when raining
+                if (rainIntensity > 0.01) {
+                    float grain = hash(uv * iResolution.xy + fract(iTime * 100.0));
+                    bg += (grain - 0.5) * grainIntensity * 0.1;
+                }
+
+                // Glass fog - only when raining
+                float fog = 0.0;
+                if (rainIntensity > 0.01) {
+                    fog = glassFog(uv, iTime, fogIntensity);
+                }
+                bg = mix(bg, vec3(0.5, 0.55, 0.52), fog);
+
+                // Static drops - only show when raining
+                float staticDrops = 0.0;
+                if (rainIntensity > 0.01) {
+                    for (int i = 0; i < 30; i++) {
+                        staticDrops += staticDrop(uv, float(i));
+                    }
+                    staticDrops *= rainIntensity;
+                }
+
+                // Falling drops layer 1
+                float drops1 = 0.0;
+                int dropCount = int(40.0 * rainIntensity);
+                for (int i = 0; i < 60; i++) {
+                    if (i >= dropCount) break;
+                    drops1 += fallingDrop(uv, iTime, float(i), 1.0);
+                }
+
+                // Falling drops layer 2
+                float drops2 = 0.0;
+                int dropCount2 = int(60.0 * rainIntensity);
+                for (int i = 0; i < 80; i++) {
+                    if (i >= dropCount2) break;
+                    drops2 += dropLayer2(uv, iTime, float(i), 1.0);
+                }
+
+                float totalDrops = staticDrops + drops1 + drops2;
+
+                // Glass refraction effect - distort background through drops (vertical only)
+                vec2 refractOffset = vec2(0.0);
+                if (totalDrops > 0.01) {
+                    float verticalDistort = (noise(uv * 20.0 + iTime + 100.0) - 0.5) * 0.003 * totalDrops;
+                    refractOffset = vec2(0.0, verticalDistort);
+                    vec3 refracted = texture2D(iChannel0, texCoord + refractOffset).rgb;
+                    bg = mix(bg, refracted, min(totalDrops * 2.0, 0.3));
+                }
+
+                // Water drop color
+                vec3 dropColor = vec3(0.9, 0.95, 1.0);
+
+                // Add drops to scene
+                bg = mix(bg, dropColor, totalDrops * 0.4);
+                bg += dropColor * drops1 * 0.2; // Highlight on falling drops
+
+                // Lightning flash - only when raining
+                if (rainIntensity > 0.01) {
+                    float flash = lightning(iTime);
+                    bg += vec3(flash * 0.3, flash * 0.35, flash * 0.4);
+                }
+
+                // Vignette
+                float vig = 1.0 - length(uv - 0.5) * 0.6;
+                bg *= vig;
+
+                // Slight blue tint for rainy mood
+                bg = mix(bg, bg * vec3(0.9, 0.95, 1.05), 0.15);
+
+                gl_FragColor = vec4(bg, 1.0);
+            }
+        `;
+
+        function createShader(gl, type, source) {
+            const shader = gl.createShader(type);
+            gl.shaderSource(shader, source);
+            gl.compileShader(shader);
+            if (!gl.getShaderParameter(shader, gl.COMPILE_STATUS)) {
+                console.error('Shader compile error:', gl.getShaderInfoLog(shader));
+                gl.deleteShader(shader);
+                return null;
+            }
+            return shader;
+        }
+
+        function createProgram(gl, vertexShader, fragmentShader) {
+            const program = gl.createProgram();
+            gl.attachShader(program, vertexShader);
+            gl.attachShader(program, fragmentShader);
+            gl.linkProgram(program);
+            if (!gl.getProgramParameter(program, gl.LINK_STATUS)) {
+                console.error('Program link error:', gl.getProgramInfoLog(program));
+                return null;
+            }
+            return program;
+        }
+
+        const vertexShader = createShader(gl, gl.VERTEX_SHADER, vertexShaderSource);
+        const fragmentShader = createShader(gl, gl.FRAGMENT_SHADER, fragmentShaderSource);
+        const program = createProgram(gl, vertexShader, fragmentShader);
+
+        const positionBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([-1,-1,1,-1,-1,1,-1,1,1,-1,1,1]), gl.STATIC_DRAW);
+
+        const texCoordBuffer = gl.createBuffer();
+        gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+        gl.bufferData(gl.ARRAY_BUFFER, new Float32Array([0,1,1,1,0,0,0,0,1,1,1,0]), gl.STATIC_DRAW);
+
+        const positionLocation = gl.getAttribLocation(program, 'a_position');
+        const texCoordLocation = gl.getAttribLocation(program, 'a_texCoord');
+        const timeLocation = gl.getUniformLocation(program, 'iTime');
+        const resolutionLocation = gl.getUniformLocation(program, 'iResolution');
+        const mouseLocation = gl.getUniformLocation(program, 'iMouse');
+        const textureLocation = gl.getUniformLocation(program, 'iChannel0');
+        const rainAmountLocation = gl.getUniformLocation(program, 'u_rainAmount');
+        const blurLevelLocation = gl.getUniformLocation(program, 'u_blurLevel');
+        const noiseLevelLocation = gl.getUniformLocation(program, 'u_noiseLevel');
+
+        const img = new Image();
+        img.crossOrigin = 'anonymous';
+        img.onload = function() {
+            bgTexture = gl.createTexture();
+            gl.bindTexture(gl.TEXTURE_2D, bgTexture);
+            gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, img);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_S, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_WRAP_T, gl.CLAMP_TO_EDGE);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.LINEAR);
+            gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.LINEAR);
+        };
+        img.src = 'landscape-bg.jpg';
+
+        function resize() {
+            canvas.width = window.innerWidth;
+            canvas.height = window.innerHeight;
+            gl.viewport(0, 0, canvas.width, canvas.height);
+        }
+        resize();
+        window.addEventListener('resize', resize);
+
+        const startTime = Date.now();
+        function render() {
+            const time = (Date.now() - startTime) / 1000;
+            gl.useProgram(program);
+
+            gl.enableVertexAttribArray(positionLocation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, positionBuffer);
+            gl.vertexAttribPointer(positionLocation, 2, gl.FLOAT, false, 0, 0);
+
+            gl.enableVertexAttribArray(texCoordLocation);
+            gl.bindBuffer(gl.ARRAY_BUFFER, texCoordBuffer);
+            gl.vertexAttribPointer(texCoordLocation, 2, gl.FLOAT, false, 0, 0);
+
+            gl.uniform1f(timeLocation, time);
+            gl.uniform2f(resolutionLocation, canvas.width, canvas.height);
+            gl.uniform2f(mouseLocation, mouseX, mouseY);
+            gl.uniform1f(rainAmountLocation, rainAmount);
+            gl.uniform1f(blurLevelLocation, blurLevel);
+            gl.uniform1f(noiseLevelLocation, noiseLevel);
+
+            gl.activeTexture(gl.TEXTURE0);
+            gl.bindTexture(gl.TEXTURE_2D, bgTexture);
+            gl.uniform1i(textureLocation, 0);
+
+            gl.drawArrays(gl.TRIANGLES, 0, 6);
+            requestAnimationFrame(render);
+        }
+        render();
+
+        console.log('Glass Rain Effect initialized');
+        console.log('Use Vibe Mixer to control rain, blur, noise');
+    })();
+    </script>
+
+    <script src="storage.js"></script>
+    <script src="api.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>

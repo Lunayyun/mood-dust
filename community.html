@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Community - Mood Dust | Cyber Zen Journal</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@300;400;500;600&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400;500&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="community.css">
+</head>
+<body>
+    <!-- Background -->
+    <canvas id="rainCanvas"></canvas>
+
+    <!-- Navigation Bar (Home / Meditation / Community) -->
+    <nav class="mode-switcher" id="navBar">
+        <a href="mood_dust.html" class="nav-btn">
+            <span class="nav-label">Home</span>
+        </a>
+        <span class="mode-divider"></span>
+        <a href="meditation.html" class="nav-btn">
+            <span class="nav-label">Meditation</span>
+        </a>
+        <span class="mode-divider"></span>
+        <a href="community.html" class="nav-btn active">
+            <span class="nav-label">Community</span>
+        </a>
+    </nav>
+
+    <!-- Main Content -->
+    <main class="community-container">
+        <!-- Page Header -->
+        <header class="community-header">
+            <h1 class="page-title">Community & Sharing</h1>
+            <p class="page-subtitle">Share your mood journey and connect with others</p>
+        </header>
+
+        <!-- Tag Filter Bar -->
+        <div class="tag-filter-bar" id="tagFilterBar">
+            <span class="tag-filter-label">Popular Tags</span>
+            <div class="tag-filter-list" id="tagFilterList">
+                <!-- Tags rendered by JS -->
+            </div>
+        </div>
+
+        <!-- New Post Composer -->
+        <div class="composer-card" id="composerCard">
+            <div class="composer-header">
+                <span class="composer-title">Share Your Thoughts</span>
+                <div class="composer-anon-toggle" id="anonToggle">
+                    <span class="anon-label">Anonymous</span>
+                    <div class="anon-switch" id="anonSwitch">
+                        <div class="anon-switch-knob"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <textarea class="composer-textarea" id="postTextarea" placeholder="Share your mood, thoughts, or a moment of peace..."></textarea>
+            
+            <div class="composer-actions">
+                <!-- Quick Tags (Popular Tags) -->
+                <div class="composer-quick-tags" id="composerQuickTags">
+                    <span class="quick-tags-label">Quick Add</span>
+                    <div class="quick-tags-list" id="quickTagsList">
+                        <!-- Quick tags rendered by JS -->
+                    </div>
+                </div>
+                <div class="composer-actions-bottom">
+                    <div class="composer-tags" id="composerTags">
+                        <input type="text" class="tag-input" id="tagInput" placeholder="Add tags (press Enter)">
+                        <div class="tag-preview" id="tagPreview">
+                            <!-- Tag previews rendered by JS -->
+                        </div>
+                    </div>
+                    <button class="composer-submit" id="submitBtn" disabled>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5" width="16" height="16">
+                            <path d="M22 2L11 13M22 2l-7 20-4-9-9-4 20-7z"/>
+                        </svg>
+                        <span>Publish</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Feed -->
+        <div class="feed-section">
+            <div class="feed-header">
+                <span class="feed-title">Community Feed</span>
+                <input class="community-search" id="communitySearch" type="search" placeholder="Search">
+                <div class="feed-sort" id="feedSort">
+                    <button class="sort-btn active" data-sort="newest">Newest</button>
+                    <button class="sort-btn" data-sort="popular">Popular</button>
+                </div>
+            </div>
+
+            <div class="feed-list" id="feedList">
+                <!-- Posts rendered by JS -->
+            </div>
+
+            <div class="feed-empty" id="feedEmpty">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1" width="48" height="48">
+                    <path d="M21 15a2 2 0 01-2 2H7l-4 4V5a2 2 0 012-2h14a2 2 0 012 2z"/>
+                </svg>
+                <p>No posts yet. Be the first to share!</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- Rain Sound Mixer -->
+    <div class="vibe-mixer" id="vibeMixer">
+        <div class="vibe-mixer-toggle" id="vibeMixerToggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 6.34L2.1 2.1m17.8 17.8l-4.24-4.24M6.34 17.66l-4.24 4.24M23 12h-6m-6 0H1m20.24-4.24l-4.24 4.24M6.34 6.34l-4.24-4.24"/>
+            </svg>
+        </div>
+        <div class="vibe-mixer-panel" id="vibeMixerPanel">
+            <div class="vibe-mixer-header">
+                <span>Rain Sound</span>
+            </div>
+            <div class="vibe-control">
+                <label>Volume</label>
+                <input type="range" id="rainSoundSlider" min="0" max="100" value="30" class="vibe-slider">
+            </div>
+        </div>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="api.js"></script>
+    <script src="community.js"></script>
+</body>
+</html>

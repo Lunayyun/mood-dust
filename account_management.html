@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>账号与服务器管理 - MOOD DUST</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="account_management.css">
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,500;1,300&family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <canvas id="rainCanvas"></canvas>
+
+    <div class="mode-switcher">
+        <a href="mood_dust.html" class="nav-btn">
+            <span class="nav-label">日记</span>
+        </a>
+        <a href="meditation.html" class="nav-btn">
+            <span class="nav-label">冥想</span>
+        </a>
+        <a href="community.html" class="nav-btn">
+            <span class="nav-label">社区</span>
+        </a>
+        <a href="account_management.html" class="nav-btn active">
+            <span class="nav-label">账号管理</span>
+        </a>
+    </div>
+
+    <div class="app-container">
+        <div class="sidebar">
+            <div class="sidebar-header">
+                <div class="greeting-subtitle">账号管理</div>
+                <div class="greeting-title">资源管理中心</div>
+                <div class="date-badge" id="current-date"></div>
+            </div>
+
+            <div class="stats-section">
+                <div class="section-header">
+                    <span class="section-title">统计概览</span>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-value" id="total-count">0</div>
+                        <div class="stat-label">总资源</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="platform-count">0</div>
+                        <div class="stat-label">平台类</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="hardware-count">0</div>
+                        <div class="stat-label">硬件类</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-value" id="software-count">0</div>
+                        <div class="stat-label">软件类</div>
+                    </div>
+                </div>
+                <div class="stats-grid">
+                    <div class="stat-card warning">
+                        <div class="stat-value" id="renewal-count">0</div>
+                        <div class="stat-label">即将续费</div>
+                    </div>
+                    <div class="stat-card danger">
+                        <div class="stat-value" id="expired-count">0</div>
+                        <div class="stat-label">已过期</div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="recent-section">
+                <div class="section-header">
+                    <span class="section-title">最近更新</span>
+                </div>
+                <div class="recent-list" id="recent-list">
+                    <div class="recent-item empty">暂无数据</div>
+                </div>
+            </div>
+        </div>
+
+        <div class="main-content">
+            <div class="toolbar">
+                <div class="search-bar">
+                    <input type="text" id="search-input" placeholder="搜索名称、账号、网址、IP..." class="keyword-input">
+                    <button id="search-btn" class="ai-btn">搜索</button>
+                </div>
+                <button id="add-btn" class="save-btn">
+                    <span>+</span>
+                    <span>新增资源</span>
+                </button>
+            </div>
+
+            <div class="filter-bar">
+                <select id="resource-type-filter" class="filter-select">
+                    <option value="">全部类型</option>
+                    <option value="platform">平台类</option>
+                    <option value="hardware">硬件类</option>
+                    <option value="software">软件类</option>
+                </select>
+                <select id="status-filter" class="filter-select">
+                    <option value="">全部状态</option>
+                    <option value="正常使用">正常使用</option>
+                    <option value="暂停使用">暂停使用</option>
+                    <option value="已停用">已停用</option>
+                    <option value="待维护">待维护</option>
+                    <option value="正常运行">正常运行</option>
+                    <option value="维护中">维护中</option>
+                    <option value="已报废">已报废</option>
+                </select>
+                <select id="renewal-filter" class="filter-select">
+                    <option value="">续费状态</option>
+                    <option value="7">7天内续费</option>
+                    <option value="30">30天内续费</option>
+                    <option value="expired">已过期</option>
+                </select>
+                <select id="paid-filter" class="filter-select">
+                    <option value="">付费状态</option>
+                    <option value="true">已付费</option>
+                    <option value="false">未付费</option>
+                </select>
+            </div>
+
+            <div class="table-container">
+                <table class="resource-table">
+                    <thead>
+                        <tr>
+                            <th>名称</th>
+                            <th>类型</th>
+                            <th>分类</th>
+                            <th>管理人</th>
+                            <th>地址/IP</th>
+                            <th>状态</th>
+                            <th>付费</th>
+                            <th>下次续费</th>
+                            <th>更新时间</th>
+                            <th>操作</th>
+                        </tr>
+                    </thead>
+                    <tbody id="resource-table-body">
+                        <tr>
+                            <td colspan="10" class="empty-row">加载中...</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="pagination">
+                <button id="prev-page" class="nav-btn-small" disabled>←</button>
+                <span id="page-info">第 1 页 / 共 1 页</span>
+                <button id="next-page" class="nav-btn-small" disabled>→</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="modal-overlay">
+        <div class="modal-container">
+            <div class="modal-header">
+                <h2 id="modal-title">新增资源</h2>
+                <button class="modal-close" id="modal-close">×</button>
+            </div>
+            <div class="modal-body">
+                <form id="resource-form">
+                    <div class="form-section">
+                        <h3 class="form-section-title">基础信息</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>资源类型 *</label>
+                                <select id="form-resource-type" class="form-select">
+                                    <option value="platform">平台类</option>
+                                    <option value="hardware">硬件类</option>
+                                    <option value="software">软件类</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label>资源名称 *</label>
+                                <input type="text" id="form-name" class="form-input" required>
+                            </div>
+                        </div>
+                        <div class="form-row" id="category-row">
+                            <div class="form-group">
+                                <label>分类 *</label>
+                                <select id="form-category" class="form-select"></select>
+                            </div>
+                            <div class="form-group">
+                                <label>状态</label>
+                                <select id="form-status" class="form-select"></select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>管理人 *</label>
+                                <input type="text" id="form-manager" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label>备注</label>
+                                <textarea id="form-remark" class="form-textarea" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">登录信息</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>登录账号 *</label>
+                                <input type="text" id="form-username" class="form-input" required>
+                            </div>
+                            <div class="form-group">
+                                <label>登录密码</label>
+                                <input type="password" id="form-password" class="form-input">
+                            </div>
+                        </div>
+                        <div class="form-row" id="login-method-row">
+                            <div class="form-group">
+                                <label>登录方式</label>
+                                <input type="text" id="form-login-method" class="form-input" placeholder="如：账号密码、手机号、扫码等">
+                            </div>
+                            <div class="form-group">
+                                <label>二次验证</label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="form-two-factor">
+                                    <span>是否绑定二次验证</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section" id="platform-section">
+                        <h3 class="form-section-title">平台信息</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>平台网址</label>
+                                <input type="url" id="form-website" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>平台用途</label>
+                                <input type="text" id="form-purpose" class="form-input">
+                            </div>
+                        </div>
+                        <div class="form-section-sub">
+                            <h4 class="form-section-subtitle">注册人信息</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>注册人</label>
+                                    <input type="text" id="form-registrant" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>联系人姓名</label>
+                                    <input type="text" id="form-contact-name" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>联系电话</label>
+                                    <input type="tel" id="form-contact-phone" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>联系邮箱</label>
+                                    <input type="email" id="form-contact-email" class="form-input">
+                                </div>
+                            </div>
+                        </div>
+                        <div class="form-section-sub">
+                            <h4 class="form-section-subtitle">平台对接人</h4>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>姓名</label>
+                                    <input type="text" id="form-platform-contact" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>单位/部门</label>
+                                    <input type="text" id="form-platform-dept" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>职务</label>
+                                    <input type="text" id="form-platform-position" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>电话</label>
+                                    <input type="tel" id="form-platform-phone" class="form-input">
+                                </div>
+                            </div>
+                            <div class="form-row">
+                                <div class="form-group">
+                                    <label>邮箱</label>
+                                    <input type="email" id="form-platform-email" class="form-input">
+                                </div>
+                                <div class="form-group">
+                                    <label>备注</label>
+                                    <textarea id="form-platform-remark" class="form-textarea" rows="2"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section" id="hardware-section">
+                        <h3 class="form-section-title">硬件信息</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>资源编号</label>
+                                <input type="text" id="form-resource-code" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>主机名</label>
+                                <input type="text" id="form-server-name" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>品牌</label>
+                                <input type="text" id="form-brand" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>型号</label>
+                                <input type="text" id="form-model" class="form-input">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>操作系统</label>
+                                <input type="text" id="form-os" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>CPU</label>
+                                <input type="text" id="form-cpu" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>内存</label>
+                                <input type="text" id="form-memory" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>磁盘容量</label>
+                                <input type="text" id="form-disk" class="form-input">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>IP地址</label>
+                                <input type="text" id="form-ip" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>内网IP</label>
+                                <input type="text" id="form-private-ip" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>公网IP</label>
+                                <input type="text" id="form-public-ip" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>登录端口</label>
+                                <input type="number" id="form-port" class="form-input">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>登录协议</label>
+                                <input type="text" id="form-protocol" class="form-input" placeholder="如：SSH、RDP">
+                            </div>
+                            <div class="form-group">
+                                <label>存放位置</label>
+                                <input type="text" id="form-location" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>启用时间</label>
+                                <input type="date" id="form-activated-at" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>是否云服务器</label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="form-is-cloud">
+                                    <span>是</span>
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section" id="software-section">
+                        <h3 class="form-section-title">软件信息</h3>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>版本</label>
+                                <input type="text" id="form-version" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>用途</label>
+                                <input type="text" id="form-software-purpose" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>部署服务器</label>
+                                <input type="text" id="form-deployed-server" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>服务器IP</label>
+                                <input type="text" id="form-server-ip" class="form-input">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>访问地址</label>
+                                <input type="url" id="form-access-address" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>端口</label>
+                                <input type="number" id="form-software-port" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>协议</label>
+                                <input type="text" id="form-software-protocol" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>部署路径</label>
+                                <input type="text" id="form-deploy-path" class="form-input">
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>部署时间</label>
+                                <input type="date" id="form-deployed-at" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>管理后台地址</label>
+                                <input type="url" id="form-admin-url" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>是否需要授权</label>
+                                <label class="checkbox-label">
+                                    <input type="checkbox" id="form-license-required">
+                                    <span>是</span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="form-row" id="license-row">
+                            <div class="form-group">
+                                <label>授权方式</label>
+                                <input type="text" id="form-license-type" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>授权期限</label>
+                                <input type="date" id="form-expires-at" class="form-input">
+                            </div>
+                            <div class="form-group">
+                                <label>许可证信息</label>
+                                <textarea id="form-license-info" class="form-textarea" rows="2"></textarea>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label>登录说明</label>
+                                <textarea id="form-login-note" class="form-textarea" rows="2"></textarea>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-section">
+                        <h3 class="form-section-title">付费信息</h3>
+                        <div id="billing-container">
+                            <div class="billing-row">
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>是否付费</label>
+                                        <label class="checkbox-label">
+                                            <input type="checkbox" class="billing-paid" checked>
+                                            <span>是</span>
+                                        </label>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>费用类型</label>
+                                        <select class="billing-fee-type form-select">
+                                            <option value="月付">月付</option>
+                                            <option value="季付">季付</option>
+                                            <option value="年付">年付</option>
+                                            <option value="按量付费">按量付费</option>
+                                            <option value="一次性付费">一次性付费</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>续费周期</label>
+                                        <input type="text" class="billing-cycle form-input" placeholder="如：每月、每年">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>续费金额</label>
+                                        <input type="number" class="billing-amount form-input">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>币种</label>
+                                        <input type="text" class="billing-currency form-input" value="CNY">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>付款人</label>
+                                        <input type="text" class="billing-payer form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>付款状态</label>
+                                        <select class="billing-status form-select">
+                                            <option value="未付款">未付款</option>
+                                            <option value="已付款">已付款</option>
+                                            <option value="待续费">待续费</option>
+                                            <option value="已停止">已停止</option>
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>最近续费时间</label>
+                                        <input type="date" class="billing-last-renewal form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>下次续费时间</label>
+                                        <input type="date" class="billing-next-renewal form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>合同名称</label>
+                                        <input type="text" class="billing-contract-name form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>合同编号</label>
+                                        <input type="text" class="billing-contract-number form-input">
+                                    </div>
+                                </div>
+                                <div class="form-row">
+                                    <div class="form-group">
+                                        <label>合同开始时间</label>
+                                        <input type="date" class="billing-contract-start form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>合同结束时间</label>
+                                        <input type="date" class="billing-contract-end form-input">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>费用说明</label>
+                                        <textarea class="billing-remark form-textarea" rows="2"></textarea>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <button type="button" id="add-billing-btn" class="layout-add-btn">+ 添加付费记录</button>
+                    </div>
+
+                    <input type="hidden" id="form-id">
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button id="cancel-btn" class="edit-btn">取消</button>
+                <button id="save-btn" class="save-btn">保存</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="detail-modal">
+        <div class="modal-container large">
+            <div class="modal-header">
+                <h2 id="detail-title">资源详情</h2>
+                <button class="modal-close" id="detail-close">×</button>
+            </div>
+            <div class="modal-body" id="detail-content"></div>
+            <div class="modal-footer">
+                <button id="detail-edit-btn" class="edit-btn">编辑</button>
+                <button id="detail-delete-btn" class="edit-btn" style="border-color: rgba(200, 100, 100, 0.4); color: rgba(200, 100, 100, 0.8);">删除</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="status-message" id="status-message"></div>
+
+    <script src="api.js"></script>
+    <script src="account_management.js"></script>
+</body>
+</html>

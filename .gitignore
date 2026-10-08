@@ -1,0 +1,26 @@
+# Local secrets and runtime data
+.env
+.env.*
+!.env.example
+*.db
+*.sqlite
+*.sqlite3
+*.log
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# Bundled local dependencies
+site-packages/
+
+# OS/editor files
+.DS_Store
+.idea/
+.vscode/
+
+# Local generated files
+uploads/*
+!uploads/.gitkeep

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mood Dust - Zen Meditation</title>
+    <link rel="stylesheet" href="meditation.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,300;1,400&family=Inter:wght@200;300;400;500;600&family=JetBrains+Mono:wght@200;300;400&display=swap" rel="stylesheet">
+</head>
+<body>
+    <!-- WebGL Rain Canvas Background -->
+    <canvas id="rainCanvas"></canvas>
+
+    <!-- Navigation Bar (Home / Meditation / Community) -->
+    <nav class="mode-switcher" id="navBar">
+        <a href="mood_dust.html" class="nav-btn" id="navHome">
+            <span class="nav-label">Home</span>
+        </a>
+        <span class="mode-divider"></span>
+        <a href="meditation.html" class="nav-btn active" id="navMeditation">
+            <span class="nav-label">Meditation</span>
+        </a>
+        <span class="mode-divider"></span>
+        <a href="community.html" class="nav-btn" id="navCommunity">
+            <span class="nav-label">Community</span>
+        </a>
+    </nav>
+
+    <!-- Main Container -->
+    <div class="zen-container">
+        <!-- Header Section -->
+        <div class="page-header">
+            <h1 class="page-title">Zen Meditation & Relaxation</h1>
+            <p class="page-subtitle">Personalized guidance based on your inner state</p>
+        </div>
+
+        <!-- Current Mood Display -->
+        <div class="mood-insight-section">
+            <div class="insight-card" id="currentMoodCard">
+                <div class="insight-header">
+                    <span class="insight-label">Current State</span>
+                    <span class="mood-indicator" id="moodIndicator">
+                        <img class="mood-icon" id="currentMoodIcon" src="" alt="Mood">
+                        <span id="currentMoodName">Analyzing...</span>
+                    </span>
+                </div>
+                <div class="mood-message" id="moodMessage"></div>
+            </div>
+
+            <!-- Mood Stats -->
+            <div class="mood-stats-section" id="moodStatsSection">
+                <div class="stats-title">Your mood pattern this month</div>
+                <div class="stats-grid" id="moodStatsGrid"></div>
+            </div>
+        </div>
+
+        <!-- Recommended Practice -->
+        <div class="recommendation-section">
+            <div class="section-label">Recommended for You</div>
+            <div class="practice-card" id="practiceCard">
+                <div class="practice-content">
+                    <div class="practice-icon" id="practiceIcon">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <circle cx="12" cy="12" r="10"/>
+                            <path d="M12 6v6l4 2"/>
+                        </svg>
+                    </div>
+                    <div class="practice-info">
+                        <h3 class="practice-title" id="practiceTitle">Loading...</h3>
+                        <p class="practice-duration" id="practiceDuration"></p>
+                    </div>
+                </div>
+                <div class="practice-guidance" id="practiceGuidance"></div>
+                <button class="start-btn" id="startPracticeBtn">
+                    <span>Begin Practice</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Practice Player (Hidden initially) -->
+        <div class="player-section hidden" id="playerSection">
+            <div class="player-card">
+                <div class="player-header">
+                    <h3 class="player-title" id="playerTitle"></h3>
+                    <button class="close-player-btn" id="closePlayerBtn">
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                            <path d="M18 6L6 18M6 6l12 12"/>
+                        </svg>
+                    </button>
+                </div>
+
+                <!-- Breathing Guide -->
+                <div class="breathing-guide hidden" id="breathingGuide">
+                    <div class="breathing-circle">
+                        <div class="circle-ring" id="breathingRing"></div>
+                        <div class="circle-text" id="breathingText">Breathe In</div>
+                    </div>
+                    <div class="breathing-instruction" id="breathingInstruction"></div>
+                </div>
+
+                <!-- Meditation Guide -->
+                <div class="meditation-guide hidden" id="meditationGuide">
+                    <div class="meditation-visual">
+                        <div class="lotus-animation" id="lotusAnimation">
+                            <svg viewBox="0 0 100 100" class="lotus-svg">
+                                <path class="petal" d="M50 50 C40 30, 20 20, 20 35 C20 50, 40 55, 50 50Z"/>
+                                <path class="petal" d="M50 50 C60 30, 80 20, 80 35 C80 50, 60 55, 50 50Z"/>
+                                <path class="petal" d="M50 50 C35 40, 25 25, 30 20 C35 15, 50 30, 50 50Z"/>
+                                <path class="petal" d="M50 50 C65 40, 75 25, 70 20 C65 15, 50 30, 50 50Z"/>
+                                <path class="petal" d="M50 50 C50 35, 45 15, 50 10 C55 15, 50 35, 50 50Z"/>
+                                <circle class="center" cx="50" cy="45" r="5"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="meditation-text" id="meditationText"></div>
+                    <div class="meditation-steps" id="meditationSteps"></div>
+                </div>
+
+                <!-- Relaxation Guide -->
+                <div class="relaxation-guide hidden" id="relaxationGuide">
+                    <div class="relaxation-visual">
+                        <div class="wave-animation" id="waveAnimation">
+                            <svg viewBox="0 0 200 60" class="wave-svg">
+                                <path class="wave-path" d="M0 30 Q25 10, 50 30 Q75 50, 100 30 Q125 10, 150 30 Q175 50, 200 30"/>
+                            </svg>
+                        </div>
+                    </div>
+                    <div class="relaxation-text" id="relaxationText"></div>
+                </div>
+
+                <!-- Player Controls -->
+                <div class="player-controls">
+                    <!-- Music player (hidden audio) -->
+                    <audio id="meditationAudio" preload="auto" loop></audio>
+                    <!-- Separate audio for timed meditation -->
+                    <audio id="timedAudio" preload="auto" loop></audio>
+                    <!-- Separate audio for mini players -->
+                    <audio id="miniAudio" preload="auto"></audio>
+                    <div class="music-label" id="musicLabel"></div>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="progressFill"></div>
+                    </div>
+                    <div class="controls-row">
+                        <span class="time-display" id="timeDisplay">0:00</span>
+                        <div class="control-buttons">
+                            <button class="ctrl-btn" id="playPauseBtn">
+                                <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                    <polygon points="5,3 19,12 5,21"/>
+                                </svg>
+                            </button>
+                            <button class="ctrl-btn" id="resetBtn">
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                    <path d="M1 4v6h6M23 20v-6h-6"/>
+                                    <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/>
+                                </svg>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- All Practices Library -->
+        <div class="library-section">
+            <div class="section-label">Practice Library</div>
+            <div class="practices-grid" id="practicesGrid"></div>
+        </div>
+
+        <!-- Timed Meditation -->
+        <div class="timed-meditation-section">
+            <div class="section-label">Timed Meditation</div>
+            <div class="timed-meditation-card" id="timedMeditationCard">
+                <div class="timed-meditation-controls">
+                    <div class="timed-title">Set Your Timer</div>
+                    <div class="timed-presets">
+                        <button class="preset-btn active" data-minutes="5">5 min</button>
+                        <button class="preset-btn" data-minutes="10">10 min</button>
+                        <button class="preset-btn" data-minutes="15">15 min</button>
+                        <button class="preset-btn" data-minutes="20">20 min</button>
+                    </div>
+                    <div class="timed-display" id="timedDisplay">5:00</div>
+                    <div class="timed-buttons">
+                        <button class="timed-btn-primary" id="timedStartBtn">
+                            <svg viewBox="0 0 24 24" fill="currentColor" stroke="none">
+                                <polygon points="5,3 19,12 5,21"/>
+                            </svg>
+                            Start
+                        </button>
+                        <button class="timed-btn-secondary" id="timedResetBtn">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                                <path d="M1 4v6h6M23 20v-6h-6"/>
+                                <path d="M20.49 9A9 9 0 005.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 013.51 15"/>
+                            </svg>
+                            Reset
+                        </button>
+                    </div>
+                    <div class="timed-music-label" id="timedMusicLabel">Select ambient music</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Rain Sound Mixer (Meditation Page - matches main page) -->
+    <div class="vibe-mixer" id="vibeMixer">
+        <div class="vibe-mixer-toggle" id="vibeMixerToggle">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.5">
+                <path d="M12 1v6m0 6v6m4.22-10.22l4.24-4.24M6.34 6.34L2.1 2.1m17.8 17.8l-4.24-4.24M6.34 17.66l-4.24 4.24M23 12h-6m-6 0H1m20.24-4.24l-4.24 4.24M6.34 6.34l-4.24-4.24"/>
+            </svg>
+        </div>
+        <div class="vibe-mixer-panel" id="vibeMixerPanel">
+            <div class="vibe-mixer-header">
+                <span>Rain Sound</span>
+            </div>
+            <div class="vibe-control">
+                <label>Volume</label>
+                <input type="range" id="rainSoundSlider" min="0" max="100" value="30" class="vibe-slider">
+            </div>
+        </div>
+    </div>
+
+    <script src="storage.js"></script>
+    <script src="api.js"></script>
+    <script src="meditation.js"></script>
+</body>
+</html>
