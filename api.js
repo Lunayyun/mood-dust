@@ -7,6 +7,23 @@
 
 const API_BASE = '/api';
 
+function isStaticPages() {
+    return window.location.hostname.endsWith('github.io');
+}
+
+async function readApiResponse(res) {
+    const type = res.headers.get('content-type') || '';
+    if (!type.includes('application/json')) {
+        return {
+            success: false,
+            error: isStaticPages()
+                ? 'GitHub Pages is running in static mode. Please deploy the Flask backend to enable login.'
+                : `Server returned HTTP ${res.status}`
+        };
+    }
+    return await res.json();
+}
+
 // 获取 token
 function getToken() {
     return localStorage.getItem('mood_dust_token');
@@ -28,13 +45,16 @@ function getHeaders() {
 
 const AuthAPI = {
     async register(username, password) {
+        if (isStaticPages()) {
+            return { success: false, error: 'GitHub Pages is running in static mode. Login and registration require the Flask backend.' };
+        }
         try {
             const res = await fetch(`${API_BASE}/auth/register`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
-            const data = await res.json();
+            const data = await readApiResponse(res);
             if (data.success) {
                 localStorage.setItem('mood_dust_token', data.data.token);
                 localStorage.setItem('mood_dust_user', data.data.username);
@@ -49,13 +69,16 @@ const AuthAPI = {
     },
 
     async login(username, password) {
+        if (isStaticPages()) {
+            return { success: false, error: 'GitHub Pages is running in static mode. Login and registration require the Flask backend.' };
+        }
         try {
             const res = await fetch(`${API_BASE}/auth/login`, {
                 method: 'POST',
                 headers: { 'Content-Type': 'application/json' },
                 body: JSON.stringify({ username, password })
             });
-            const data = await res.json();
+            const data = await readApiResponse(res);
             if (data.success) {
                 localStorage.setItem('mood_dust_token', data.data.token);
                 localStorage.setItem('mood_dust_user', data.data.username);
