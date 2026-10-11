@@ -10,7 +10,7 @@ It is designed to feel less like a productivity dashboard and more like a place 
 
 **GitHub Pages:** [Open Mood Dust](https://lunayyun.github.io/moon-dust/mood_dust.html)
 
-![Mood Dust main page](https://image.thum.io/get/width/1200/crop/900/https://lunayyun.github.io/moon-dust/mood_dust.html)
+![Mood Dust main page](readme-main-page.png)
 
 The public Pages version is a browser-first, static edition of the project. It supports local registration and login, diary writing, mood tracking, meditation, local community posts, and other client-side experiences without requiring a Flask server.
 
