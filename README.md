@@ -1,16 +1,16 @@
-# Moon Dust
+# Mood Dust
 
 > A quiet digital room for the days that feel too loud.
 
-Moon Dust is a reflective web experience for recording moods, shaping private thoughts, slowing down with guided meditation, and sharing small pieces of life with a gentle community.
+Mood Dust is a reflective web experience for recording moods, shaping private thoughts, slowing down with guided meditation, and sharing small pieces of life with a gentle community.
 
 It is designed to feel less like a productivity dashboard and more like a place you can return to: write a few lines, name what you are feeling, listen to the rain, and leave with a little more room to breathe.
 
 ## Live Demo
 
-**GitHub Pages:** [Open Moon Dust](https://lunayyun.github.io/moon-dust/mood_dust.html)
+**GitHub Pages:** [Open Mood Dust](https://lunayyun.github.io/moon-dust/mood_dust.html)
 
-![Moon Dust visual preview](landscape-bg.jpg)
+![Mood Dust main page](https://image.thum.io/get/width/1200/crop/900/https://lunayyun.github.io/moon-dust/mood_dust.html)
 
 The public Pages version is a browser-first, static edition of the project. It supports local registration and login, diary writing, mood tracking, meditation, local community posts, and other client-side experiences without requiring a Flask server.
 
@@ -29,7 +29,7 @@ The public Pages version is a browser-first, static edition of the project. It s
 
 No installation is required.
 
-1. Open the [Moon Dust website](https://lunayyun.github.io/moon-dust/mood_dust.html).
+1. Open the [Mood Dust website](https://lunayyun.github.io/moon-dust/mood_dust.html).
 2. Create an account on the welcome screen.
 3. Sign in and begin with a mood, a sentence, or a quiet moment.
 
@@ -76,9 +76,9 @@ For local Flask development:
 - A private `.env` file.
 - An AI provider key only if you want to use the server-side poetry feature.
 
-## Who Is Moon Dust For?
+## Who Is Mood Dust For?
 
-Moon Dust is for people who want a softer way to notice their inner weather:
+Mood Dust is for people who want a softer way to notice their inner weather:
 
 - journalers who prefer atmosphere over rigid productivity;
 - students and creatives moving through busy or uncertain seasons;
