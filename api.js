@@ -11,6 +11,34 @@ function isStaticPages() {
     return window.location.hostname.endsWith('github.io');
 }
 
+function localAuthHash(value) {
+    let hash = 2166136261;
+    for (let i = 0; i < value.length; i++) {
+        hash ^= value.charCodeAt(i);
+        hash = Math.imul(hash, 16777619);
+    }
+    return (hash >>> 0).toString(16);
+}
+
+function localAuthToken(username) {
+    return `local-${localAuthHash(`${username}:${Date.now()}:${Math.random()}`)}`;
+}
+
+function getLocalUsers() {
+    try {
+        return JSON.parse(localStorage.getItem('mood_dust_users') || '{}');
+    } catch (e) {
+        return {};
+    }
+}
+
+function setLocalSession(username) {
+    localStorage.setItem('mood_dust_token', localAuthToken(username));
+    localStorage.setItem('mood_dust_user', username);
+    localStorage.setItem('mood_dust_user_id', localAuthHash(username));
+    localStorage.setItem('mood_dust_logged_in', 'true');
+}
+
 async function readApiResponse(res) {
     const type = res.headers.get('content-type') || '';
     if (!type.includes('application/json')) {
@@ -46,7 +74,25 @@ function getHeaders() {
 const AuthAPI = {
     async register(username, password) {
         if (isStaticPages()) {
-            return { success: false, error: 'GitHub Pages is running in static mode. Login and registration require the Flask backend.' };
+            const users = getLocalUsers();
+            const normalizedUsername = username.trim();
+            if (users[normalizedUsername]) {
+                return { success: false, error: 'Username already exists.' };
+            }
+            users[normalizedUsername] = {
+                password: localAuthHash(password),
+                createdAt: new Date().toISOString()
+            };
+            localStorage.setItem('mood_dust_users', JSON.stringify(users));
+            setLocalSession(normalizedUsername);
+            return {
+                success: true,
+                data: {
+                    username: normalizedUsername,
+                    user_id: localAuthHash(normalizedUsername),
+                    token: getToken()
+                }
+            };
         }
         try {
             const res = await fetch(`${API_BASE}/auth/register`, {
@@ -70,7 +116,20 @@ const AuthAPI = {
 
     async login(username, password) {
         if (isStaticPages()) {
-            return { success: false, error: 'GitHub Pages is running in static mode. Login and registration require the Flask backend.' };
+            const normalizedUsername = username.trim();
+            const user = getLocalUsers()[normalizedUsername];
+            if (!user || user.password !== localAuthHash(password)) {
+                return { success: false, error: 'Incorrect username or password.' };
+            }
+            setLocalSession(normalizedUsername);
+            return {
+                success: true,
+                data: {
+                    username: normalizedUsername,
+                    user_id: localAuthHash(normalizedUsername),
+                    token: getToken()
+                }
+            };
         }
         try {
             const res = await fetch(`${API_BASE}/auth/login`, {
@@ -95,6 +154,13 @@ const AuthAPI = {
     async verify() {
         const token = getToken();
         if (!token) return { success: false };
+        if (isStaticPages()) {
+            return {
+                success: localStorage.getItem('mood_dust_logged_in') === 'true' &&
+                    token.startsWith('local-'),
+                data: { username: localStorage.getItem('mood_dust_user') }
+            };
+        }
         try {
             const res = await fetch(`${API_BASE}/auth/verify`, {
                 method: 'POST',
