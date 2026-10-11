@@ -8,7 +8,7 @@ It is designed to feel less like a productivity dashboard and more like a place 
 
 ## Live Demo
 
-**GitHub Pages:** [Open Mood Dust](https://lunayyun.github.io/moon-dust/mood_dust.html)
+**GitHub Pages:** [Open Mood Dust](https://lunayyun.github.io/mood-dust/mood_dust.html)
 
 ![Mood Dust main page](readme-main-page.png)
 
@@ -29,7 +29,7 @@ The public Pages version is a browser-first, static edition of the project. It s
 
 No installation is required.
 
-1. Open the [Mood Dust website](https://lunayyun.github.io/moon-dust/mood_dust.html).
+1. Open the [Mood Dust website](https://lunayyun.github.io/mood-dust/mood_dust.html).
 2. Create an account on the welcome screen.
 3. Sign in and begin with a mood, a sentence, or a quiet moment.
 
@@ -40,8 +40,8 @@ The hosted static version stores account and diary data in your browser's `local
 The front end can be opened directly in a browser, although a small local server is recommended for a smoother experience with assets and browser security rules.
 
 ```bash
-git clone https://github.com/Lunayyun/moon-dust.git
-cd moon-dust
+git clone https://github.com/Lunayyun/mood-dust.git
+cd mood-dust
 python3 -m http.server 8000
 ```
 
